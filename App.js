@@ -1,7 +1,17 @@
-import { StatusBar } from 'expo-status-bar';
+import React, {useState} from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
+import { Tempo } from './components/previsao';
+import Api from './components/Api';
 
 export default function App() {
+  const [dados, setDados] = useState("");
+
+  const [cidade, setCidade] = useState('Mongagua')
+  async function carregaDados(){
+    const response = await Api.get(`weather?array_limit=1&fields=only_results,temp,city_name,description,forecast,max,min,date&key=d88e5693&city_name=${cidade},SP`)
+    setDados(response.data);
+  
+  }
   return (
     <View style={styles.container}>
       <View>
@@ -20,15 +30,20 @@ export default function App() {
         <TextInput
           placeholder='digita sua cidade fi'
           style={styles.input}
-          
+          value={cidade}
+          onChangeText={(cidade) => setCidade(cidade)}          
         />
       </View>
       <View style={styles.blocos}>
         <TouchableOpacity
         style={styles.btn}
+        onPress={carregaDados}
         >
           <Text style={styles.btnTexto}>BUSCAR</Text>
         </TouchableOpacity>
+      </View>
+      <View style={styles.blocos}>
+        <Tempo  data={dados}/>
       </View>
     </View>
   );
