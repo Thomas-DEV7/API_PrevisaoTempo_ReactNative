@@ -1,8 +1,17 @@
-import react from 'react';
-import { StyleSheet, Text, View, TextInput,TouchableOpacity  } from 'react-native';
-
+import react, {useState} from 'react';
+import { StyleSheet, Text, View, TextInput,TouchableOpacity} from 'react-native';
+import Tempo from './components/Tempo';
+import Api from './components/axios';
 
 export default function App() {
+
+  const [dados, setDados] = useState("");
+
+  async function carregaDados(){
+    const response = await Api.get('weather?array_limit=1&fields=only_results,temp,city_name,description,forecast,max,min,date&key=cd8b7e55&city_name=mongagua,SP');
+    setDados(response.data.forecast[0]);
+
+  }
   return (
     <View style={styles.container}>
       <View style={styles.head}>
@@ -13,11 +22,13 @@ export default function App() {
         style={styles.input}
         placeholder="ex: Carapicuíba"
       />
-      <TouchableOpacity  style={styles.btn}>
+      <TouchableOpacity  style={styles.btn} onPress={carregaDados}>
         <Text style={styles.txtBtn}>
           Buscar
         </Text>
+        
       </TouchableOpacity>
+      <Tempo/>
     </View>
   );
 }
@@ -50,4 +61,5 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
   }
+  
 });
