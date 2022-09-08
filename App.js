@@ -1,17 +1,21 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity } from 'react-native';
-import { Tempo } from './components/previsao';
-import Api from './components/Api';
+import { Tempo } from './Components/previsao';
+import Api from './Components/Api';
 
 export default function App() {
   const [dados, setDados] = useState("");
 
-  const [cidade, setCidade] = useState('Mongagua')
+  const [cidade, setCidade] = useState('São Paulo')
   async function carregaDados(){
-    const response = await Api.get(`weather?array_limit=1&fields=only_results,temp,city_name,description,forecast,max,min,date&key=d88e5693&city_name=${cidade},SP`)
+    const response = await Api.get(`weather?array_limit=1&fields=only_results,temp,city_name,description,time,wind_speedy,forecast,max,min,date&key=7e7569c9&city_name=${cidade},SP`)
     setDados(response.data);
   
   }
+
+  function limpar(){
+    setCidade("");
+  } 
   return (
     <View style={styles.container}>
       <View>
@@ -41,6 +45,14 @@ export default function App() {
         >
           <Text style={styles.btnTexto}>BUSCAR</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+        style={styles.btn}
+        onPress={limpar}
+        >
+          <Text style={styles.btnTexto}>LIMPAR</Text>
+        </TouchableOpacity>
+
       </View>
       <View style={styles.blocos}>
         <Tempo  data={dados}/>
